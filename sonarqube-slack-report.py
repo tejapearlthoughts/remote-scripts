@@ -31,11 +31,12 @@ class SonarQubeReportSlack:
         count, summary = self.generate_summary(report)
         print(summary)
         print("::set-output name=summary::%s." % summary)
-        self.post_file_to_slack(
+        slack_status = self.post_file_to_slack(
             summary,
             'Report.html',
             report)
         # Block Build in case of blocker
+        print(slack_status)
         if int(count) > 1 and self.fail_build == "true":
             sys.exit(1)
 
