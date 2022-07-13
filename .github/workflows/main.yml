@@ -1,27 +1,12 @@
+name: "SonarQube Code Scanner"
 on:
-  # Trigger analysis when pushing in master or pull requests, and when creating
-  # a pull request. 
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
-      types: [opened, synchronize, reopened]
-
-name: "SonarQube Security Code Scanning"
 jobs:
   sonarqube-job:
-    name: Scan code
+    name: SonarQube Code Scanner
     runs-on: ubuntu-latest
-    container:
-      image: sonarsource/sonar-scanner-cli
-      env:
-        fail_build: "false"
-        component: "dehaat_repository"
-        sonar_url: "http://sonarqube:9000"
-        sonar_username: "admin"
-        sonar_password: "admin"
-        slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        slack_channel: "C0390TN4CK1"
 
     services:
       sonarqube:
@@ -30,38 +15,31 @@ jobs:
           SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
         ports:
           - 9000:9000
-    steps:
-      - name: Curl sonarqube server status
-        run: |
-          curl --connect-timeout 5 \
-          --max-time 10 \
-          --retry 20 \
-          --retry-delay 0 \
-          --retry-max-time 120 \
-          --retry-connrefused \
-          'http://sonarqube:9000/api/system/status'
-      - name: Wait for Sonarqube server to be up
-        run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-restart.sh | sh
+container:
+  image: sonarsource/sonar-scanner-cli
+  env:
+    fail_build: "false"
+    component: "dehaat_repository"
+    sonar_url: "http://sonarqube:9000"
+    sonar_username: "admin"
+    sonar_password: "admin"
+    slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+    slack_channel: "C0390TN4CK1"
+  
+  steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+  
+    - name: Run sonarqube scanner
+      run: sonar-scanner
+        -Dsonar.projectKey=dehaat_repository
+        -Dsonar.sources=$GITHUB_WORKSPACE
+        -Dsonar.host.url=http://sonarqube:9000
+        -Dsonar.login=admin
+        -Dsonar.password=admin
+    
+    - name: Install SonarReport
+      run: npm install -g sonar-report
 
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - name: Run sonarqube scanner
-        run: sonar-scanner
-          -Dsonar.projectKey=farmerapp
-          -Dsonar.sources=$GITHUB_WORKSPACE
-          -Dsonar.host.url=http://sonarqube:9000
-          -Dsonar.login=admin
-          -Dsonar.password=admin
-
-      - name: Install Some python Dependendencies
-        run: pip3 install requests lxml
-
-      - name: Install npm for SonarReport
-        run: apk add --update nodejs npm && apk add --update npm
-
-      - name: Install SonarReport
-        run: npm install -g sonar-report
-
-      - name: Fail Build and Send Slack Report
-        run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
+    - name: Fail Build and Send Slack Report
+      run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
