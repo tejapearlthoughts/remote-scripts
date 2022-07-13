@@ -64,8 +64,8 @@ jobs:
         run: npm install -g sonar-report
 
       - name: Fail Build and Send Slack Report
-        run: curl -s https://github.com/tejapearlthoughts/remote-scripts/blob/main/sonarqube-slack-report.py | python3
-       # run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
+        #run: curl -s https://github.com/tejapearlthoughts/remote-scripts/blob/main/sonarqube-slack-report.py | python3
+        run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
       #- name: Notify slack
        # env:
         #  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
