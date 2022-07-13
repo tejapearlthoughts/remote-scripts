@@ -1,6 +1,12 @@
-name: "SonarQube Security Code Scanning"
 on:
-  workflow_dispatch
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request. 
+  push:
+    branches:
+      - master
+  pull_request:
+      types: [opened, synchronize, reopened]
+name: "SonarQube Security Code Scanning"
 
 jobs:
   sonarqube-job:
