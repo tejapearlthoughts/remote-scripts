@@ -21,7 +21,7 @@ jobs:
         sonar_username: "admin"
         sonar_password: "admin"
         slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        slack_channel: "general"
+        slack_channel: "C0390TN4CK1"
 
     services:
       sonarqube:
