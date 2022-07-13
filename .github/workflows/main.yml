@@ -1,3 +1,4 @@
+name: "SonarQube Security Code Scanning"
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
   # a pull request. 
@@ -6,7 +7,6 @@ on:
       - master
   pull_request:
       types: [opened, synchronize, reopened]
-name: "SonarQube Security Code Scanning"
 
 jobs:
   sonarqube-job:
@@ -21,7 +21,7 @@ jobs:
         sonar_username: "admin"
         sonar_password: "admin"
         slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        slack_channel: "C0390TN4CK1"
+        slack_channel: "C134554U6Ni"
 
     services:
       sonarqube:
