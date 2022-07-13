@@ -1,0 +1,16 @@
+on:
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request. 
+  push:
+    branches:
+      - main
+  pull_request:
+      types: [opened, synchronize, reopened]
+
+
+- name: Notify slack
+  env:
+    SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  uses: pullreminders/slack-action@master
+  with:
+    args: '{\"channel\":\"C0390TN4CK1\",\"text\":\"Hello world\"}'
