@@ -63,5 +63,11 @@ jobs:
       - name: Install SonarReport
         run: npm install -g sonar-report
 
-      - name: Fail Build and Send Slack Report
-        run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
+     # - name: Fail Build and Send Slack Report
+       # run: curl -s https://raw.githubusercontent.com/sttor/remote-scripts/main/sonarqube-slack-report.py | python3
+      - name: Notify slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C0390TN4CK1\",\"text\":\"Hello world\"}'
