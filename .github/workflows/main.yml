@@ -53,6 +53,10 @@ jobs:
           -Dsonar.host.url=http://sonarqube:9000
           -Dsonar.login=admin
           -Dsonar.password=admin
+  
+      - name: curl url
+        run: curl http://sonarqube:9000/dashboard?id=farmerapp
+
 
       - name: Install Some python Dependendencies
         run: pip3 install requests lxml
